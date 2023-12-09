@@ -1,20 +1,33 @@
 import pygame
 import math
+import numpy as np
 
 pygame.init()
 
 WIDTH, HEIGHT = 700, 700
 CENTER_X, CENTER_Y = WIDTH // 2, HEIGHT // 2
 DEFAULT_ROT_SPEED = 1
-ROT_SPEED = DEFAULT_ROT_SPEED  # Rotation speed
+ROT_SPEED = DEFAULT_ROT_SPEED
 RADIUS = 300
 ARROW_LENGTH = 0.9 * RADIUS
-DECEL_RATE = 0.001 
+DECEL_RATE = 0.001  #try to relate this to the number of choices
+
 
 # Define button properties
 BUTTON_WIDTH, BUTTON_HEIGHT = 100, 50
 BUTTON_X, BUTTON_Y = WIDTH - BUTTON_WIDTH - 10, HEIGHT - BUTTON_HEIGHT - 10
 
+# Define number of choices and colors for each choice
+num_choices = 7
+colors = [
+    (255, 0, 0),    # Red
+    (255, 255, 0),  # Yellow
+    (0, 255, 0),    # Green
+    (0, 255, 255),  # Cyan
+    (0, 0, 255),    # Blue
+    (255, 0, 255),  # Magenta
+    (128, 128, 128) # Grey
+]
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 angle = 0  # Start angle
@@ -52,12 +65,25 @@ while running:
 
     # Draw circle and arrow
     screen.fill((255, 255, 255))  # white background
-    pygame.draw.circle(screen, (0, 0, 0), (CENTER_X, CENTER_Y), RADIUS)  # Draw the wheel (black circle)
+
+    # Draw the quadrants
+    for i in range(num_choices):
+        start_angle = i * (360 / num_choices)
+        end_angle = (i + 1) * (360 / num_choices)
+        points = [(CENTER_X, CENTER_Y)]
+        for arc_angle in np.arange(start_angle, end_angle + 1):
+            points.append((
+                CENTER_X + RADIUS * math.cos(math.radians(arc_angle)),
+                CENTER_Y + RADIUS * math.sin(math.radians(arc_angle))
+            ))
+        pygame.draw.polygon(screen, colors[i % len(colors)], points)
+
+    # Draw the arrow
     end_pos = (
         CENTER_X + ARROW_LENGTH * math.cos(math.radians(angle)),
         CENTER_Y + ARROW_LENGTH * math.sin(math.radians(angle))
     )
-    pygame.draw.line(screen, (255, 0, 0), (CENTER_X, CENTER_Y), end_pos, 3)  # Draw the arrow
+    pygame.draw.line(screen, (0, 0, 0), (CENTER_X, CENTER_Y), end_pos, 3)  # Draw the arrow in black
 
     # Draw the arrowhead
     arrow_angle = math.radians(angle)
@@ -73,7 +99,7 @@ while running:
             end_pos[1] - arrowhead_size * math.sin(arrow_angle - math.pi / 6)
         )
     ]
-    pygame.draw.polygon(screen, (255, 0, 0), arrowhead_points)  # Draw the arrowhead
+    pygame.draw.polygon(screen, (0, 0, 0), arrowhead_points)  # Draw the arrowhead in black
 
     # Draw the button
     pygame.draw.rect(screen, (0, 255, 0), pygame.Rect(BUTTON_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT))
