@@ -1,3 +1,16 @@
+"""
+This module contains functions for creating a picker wheel. 
+The picker wheel is created by drawing a circle and dividing it into quadrants, each of which contains a choice.
+The user can select a choice by clicking a button to start the wheel spinning, and clicking the button again to stop the wheel.
+The wheel will spin for a short amount of time before stopping on a choice (decelerating).
+The user can then click the button again to start the wheel spinning again.
+
+Functions:
+----------
+create_choices():
+    Prompts the user for the number of choices desired, ensures uniqueness of choices, and allows correction of choices.
+"""
+
 import pygame
 import math
 import numpy as np
