@@ -58,7 +58,7 @@ DEFAULT_ROT_SPEED = 1
 ROT_SPEED = DEFAULT_ROT_SPEED
 RADIUS = 300
 ARROW_LENGTH = 0.9 * RADIUS
-DECEL_RATE = 0.001  #try to relate this to the number of choices
+DECEL_RATE = 0.001 
 
 
 # Define button properties
@@ -89,20 +89,20 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
+        elif event.type == pygame.MOUSEBUTTONDOWN: #if the left mouse button is pressed
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            if BUTTON_X <= mouse_x <= BUTTON_X + BUTTON_WIDTH and BUTTON_Y <= mouse_y <= BUTTON_Y + BUTTON_HEIGHT:
+            if BUTTON_X <= mouse_x <= BUTTON_X + BUTTON_WIDTH and BUTTON_Y <= mouse_y <= BUTTON_Y + BUTTON_HEIGHT: #if the mouse is within the button (i.e. the button is clicked)
                 if rotating:
-                    decelerating = True
+                    decelerating = True # Start decelerating the rotating arrow
                 else:
-                    rotating = True
-                    ROT_SPEED = DEFAULT_ROT_SPEED  # Reset rotation speed
+                    rotating = True # Start rotating the arrow
+                    ROT_SPEED = DEFAULT_ROT_SPEED  # Make sure rotation speed to default before rotating again (in case of deceleration)
 
     if rotating:
         # Rotate the arrow
         angle += ROT_SPEED
         if angle >= 360:
-            angle -= 360
+            angle -= 360 # Keep the angle between 0 and 360
 
         if decelerating:
             # If decelerating, decrease the rotation speed
@@ -115,12 +115,17 @@ while running:
     # Draw circle and arrow
     screen.fill((255, 255, 255))  # white background
 
-    # Draw the black frame
+    # Draw the black frame around the circle
     pygame.draw.circle(screen, (0, 0, 0), (CENTER_X, CENTER_Y), RADIUS + 3)
 
 
     # Calculate the maximum width and height of the text that can fit in the quadrant
-    max_text_width = RADIUS * math.cos(math.radians(360 / num_choices / 2))
+    # Assume the text is a right-angled triangle with the hypotenuse being the radius of the circle
+    # The width of a right-angled triangle (adjacent side) can be calculated using the formula:
+    # width = hypotenuse * cos(angle) (CAH)
+    # The height of a right-angled triangle (opposite side) can be calculated using the formula:
+    # height = hypotenuse * sin(angle) (SOH)
+    max_text_width = RADIUS * math.cos(math.radians(360 / num_choices / 2)) 
     max_text_height = RADIUS * math.sin(math.radians(360 / num_choices / 2))
 
     # Draw the quadrants
@@ -134,10 +139,10 @@ while running:
         points = [(CENTER_X, CENTER_Y)]
         for arc_angle in np.arange(start_angle, end_angle + 1):
             points.append((
-                CENTER_X + RADIUS * math.cos(math.radians(arc_angle)),
-                CENTER_Y + RADIUS * math.sin(math.radians(arc_angle))
+                CENTER_X + RADIUS * math.cos(math.radians(arc_angle)), # x-coordinate: center_x + radius * cos(angle)
+                CENTER_Y + RADIUS * math.sin(math.radians(arc_angle))  # y-coordinate: center_y + radius * sin(angle)
             ))
-        pygame.draw.polygon(screen, colors[i % len(colors)], points)
+        pygame.draw.polygon(screen, colors[i], points) # Draw the quadrant (arc)    in the color of the choice
 
         # Draw the choice text
         text_surface = font.render(choices[i], True, (0, 0, 0))  # Black text
@@ -154,7 +159,7 @@ while running:
             CENTER_X + RADIUS/2 * math.cos(math.radians((start_angle + end_angle) / 2)),
             CENTER_Y + RADIUS/2 * math.sin(math.radians((start_angle + end_angle) / 2))
         ))
-        screen.blit(text_surface, text_rect)
+        screen.blit(text_surface, text_rect) # Draw the text in the center of the quadrant
 
         # Draw black separators
         separator_pos = (
@@ -176,7 +181,7 @@ while running:
     arrowhead_points = [
         end_pos,
         (
-            end_pos[0] - arrowhead_size * math.cos(arrow_angle + math.pi / 6),
+            end_pos[0] - arrowhead_size * math.cos(arrow_angle + math.pi / 6), #why +/- pi/6? because the arrowhead is an equilateral triangle, so the angle between the arrow and the arrowhead is 60 degrees
             end_pos[1] - arrowhead_size * math.sin(arrow_angle + math.pi / 6)
         ),
         (
@@ -189,11 +194,11 @@ while running:
     # Draw the button
     pygame.draw.rect(screen, (0, 255, 0), pygame.Rect(BUTTON_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT))
     if rotating:
-        text = pygame.font.Font(None, 24).render("Stop", True, (0, 0, 0))
+        text = pygame.font.Font(None, 24).render("Stop", True, (0, 0, 0)) #if the arrow is rotating, the button should say "Stop"
     else:
-        text = pygame.font.Font(None, 24).render("Start", True, (0, 0, 0))
-    screen.blit(text, (BUTTON_X + 10, BUTTON_Y + 10))
+        text = pygame.font.Font(None, 24).render("Start", True, (0, 0, 0)) #if the arrow is not rotating, the button should say "Start"
+    screen.blit(text, (BUTTON_X + 10, BUTTON_Y + 10)) #draw the text on the button
 
-    pygame.display.flip()
+    pygame.display.flip() #update the display
 
-pygame.quit()
+pygame.quit() 
