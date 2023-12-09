@@ -39,4 +39,5 @@ def unique_choice():
         print("Please enter a number greater than 1.")
         return unique_choice()
 
-unique_choice()
+if __name__ == "__main__":
+    unique_choice()
