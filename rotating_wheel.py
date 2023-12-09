@@ -66,6 +66,9 @@ while running:
     # Draw circle and arrow
     screen.fill((255, 255, 255))  # white background
 
+    # Draw the black frame
+    pygame.draw.circle(screen, (0, 0, 0), (CENTER_X, CENTER_Y), RADIUS + 3)
+
     # Draw the quadrants
     for i in range(num_choices):
         start_angle = i * (360 / num_choices)
@@ -77,6 +80,13 @@ while running:
                 CENTER_Y + RADIUS * math.sin(math.radians(arc_angle))
             ))
         pygame.draw.polygon(screen, colors[i % len(colors)], points)
+
+        # Draw black separators
+        separator_pos = (
+            CENTER_X + RADIUS * math.cos(math.radians(start_angle)),
+            CENTER_Y + RADIUS * math.sin(math.radians(start_angle))
+        )
+        pygame.draw.line(screen, (0, 0, 0), (CENTER_X, CENTER_Y), separator_pos, 3)
 
     # Draw the arrow
     end_pos = (
