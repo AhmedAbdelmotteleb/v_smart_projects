@@ -105,11 +105,17 @@ while running:
     # Draw the black frame
     pygame.draw.circle(screen, (0, 0, 0), (CENTER_X, CENTER_Y), RADIUS + 3)
 
-    # Create a font object
-    font = pygame.font.Font(None, 36)
+
+    # Calculate the maximum width and height of the text that can fit in the quadrant
+    max_text_width = RADIUS * math.cos(math.radians(360 / num_choices / 2))
+    max_text_height = RADIUS * math.sin(math.radians(360 / num_choices / 2))
 
     # Draw the quadrants
     for i in range(num_choices):
+        # Create a font object
+        font_size = 36
+        font = pygame.font.Font(None, font_size)
+        
         start_angle = i * (360 / num_choices)
         end_angle = (i + 1) * (360 / num_choices)
         points = [(CENTER_X, CENTER_Y)]
@@ -122,6 +128,15 @@ while running:
 
         # Draw the choice text
         text_surface = font.render(choices[i], True, (0, 0, 0))  # Black text
+        text_width, text_height = text_surface.get_size()
+
+        # Reduce the font size until the text fits within the quadrant
+        while text_width > max_text_width or text_height > max_text_height:
+            font_size -= 1
+            font = pygame.font.Font(None, font_size)
+            text_surface = font.render(choices[i], True, (0, 0, 0))
+            text_width, text_height = text_surface.get_size()
+
         text_rect = text_surface.get_rect(center=(
             CENTER_X + RADIUS/2 * math.cos(math.radians((start_angle + end_angle) / 2)),
             CENTER_Y + RADIUS/2 * math.sin(math.radians((start_angle + end_angle) / 2))
