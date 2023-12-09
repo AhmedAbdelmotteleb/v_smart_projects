@@ -2,6 +2,41 @@ import pygame
 import math
 import numpy as np
 
+def create_choices():
+    """
+    Produce a choice based on unique user inputs (up to 7 choices, for no reason).
+    
+    This function prompts the user for the number of choices desired,
+    ensures uniqueness of choices, and allows correction of choices.
+    """
+    num_choices = int(input("How many choices do you want? "))
+    if 2 <= num_choices <= 7: 
+        choices = []
+        for i in range(num_choices):
+            choice = input(f"Enter choice {i+1}: ")
+            while choice in choices:
+                print("That choice is already in the list.")
+                choice = input(f"Enter choice {i+1}: ")
+
+            confirm = ''
+            while confirm not in ['y', 'n', 'r']:
+                confirm = input(f"Confirm '{choice}' (y/n). Or use (r) to reset: ").lower()
+
+            if confirm == 'y':
+                choices.append(choice)
+            elif confirm == 'n':
+                choices.append(choice)
+                # Give the user a chance to correct the specific choice
+                choice_idx = choices.index(choice)
+                new_choice = input(f"Enter the corrected choice for '{choice}': ")
+                choices[choice_idx] = new_choice
+            else: #reset
+                return create_choices()
+        return choices
+    else:
+        print("Please enter a number between 2 and 7.")
+        return create_choices()
+
 pygame.init()
 
 WIDTH, HEIGHT = 700, 700
@@ -18,7 +53,8 @@ BUTTON_WIDTH, BUTTON_HEIGHT = 100, 50
 BUTTON_X, BUTTON_Y = WIDTH - BUTTON_WIDTH - 10, HEIGHT - BUTTON_HEIGHT - 10
 
 # Define number of choices and colors for each choice
-num_choices = 7
+choices = create_choices()
+num_choices = len(choices)
 colors = [
     (255, 0, 0),    # Red
     (255, 255, 0),  # Yellow
@@ -69,6 +105,9 @@ while running:
     # Draw the black frame
     pygame.draw.circle(screen, (0, 0, 0), (CENTER_X, CENTER_Y), RADIUS + 3)
 
+    # Create a font object
+    font = pygame.font.Font(None, 36)
+
     # Draw the quadrants
     for i in range(num_choices):
         start_angle = i * (360 / num_choices)
@@ -80,6 +119,14 @@ while running:
                 CENTER_Y + RADIUS * math.sin(math.radians(arc_angle))
             ))
         pygame.draw.polygon(screen, colors[i % len(colors)], points)
+
+        # Draw the choice text
+        text_surface = font.render(choices[i], True, (0, 0, 0))  # Black text
+        text_rect = text_surface.get_rect(center=(
+            CENTER_X + RADIUS/2 * math.cos(math.radians((start_angle + end_angle) / 2)),
+            CENTER_Y + RADIUS/2 * math.sin(math.radians((start_angle + end_angle) / 2))
+        ))
+        screen.blit(text_surface, text_rect)
 
         # Draw black separators
         separator_pos = (
