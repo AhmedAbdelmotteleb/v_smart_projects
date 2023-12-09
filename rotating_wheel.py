@@ -5,9 +5,11 @@ pygame.init()
 
 WIDTH, HEIGHT = 700, 700
 CENTER_X, CENTER_Y = WIDTH // 2, HEIGHT // 2
-ROT_SPEED = 0.4
+DEFAULT_ROT_SPEED = 1
+ROT_SPEED = DEFAULT_ROT_SPEED  # Rotation speed
 RADIUS = 300
-ARROW_LENGTH = 0.9 * RADIUS
+ARROW_LENGTH = 0.8 * RADIUS
+DECEL_RATE = 0.001 
 
 # Define button properties
 BUTTON_WIDTH, BUTTON_HEIGHT = 100, 50
@@ -18,6 +20,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 angle = 0  # Start angle
 running = True
 rotating = False  # Start with the arrow not rotating
+decelerating = False  # Start with no deceleration
 
 # Game loop
 while running:
@@ -27,13 +30,25 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
             if BUTTON_X <= mouse_x <= BUTTON_X + BUTTON_WIDTH and BUTTON_Y <= mouse_y <= BUTTON_Y + BUTTON_HEIGHT:
-                rotating = not rotating  # Toggle rotation on button click
+                if rotating:
+                    decelerating = True
+                else:
+                    rotating = True
+                    ROT_SPEED = DEFAULT_ROT_SPEED  # Reset rotation speed
 
     if rotating:
         # Rotate the arrow
         angle += ROT_SPEED
         if angle >= 360:
             angle -= 360
+
+        if decelerating:
+            # If decelerating, decrease the rotation speed
+            ROT_SPEED -= DECEL_RATE
+            if ROT_SPEED <= 0:
+                # If the rotation speed is 0 or less, stop rotating and decelerating
+                rotating = False
+                decelerating = False
 
     # Draw circle and arrow
     screen.fill((255, 255, 255))  # white background
@@ -43,7 +58,6 @@ while running:
         CENTER_Y + ARROW_LENGTH * math.sin(math.radians(angle))
     )
     pygame.draw.line(screen, (255, 0, 0), (CENTER_X, CENTER_Y), end_pos, 3)  # Draw the arrow
-
 
     # Draw the arrowhead
     arrow_angle = math.radians(angle)
