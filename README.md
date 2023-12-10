@@ -9,4 +9,4 @@ Current projects:
 
 - [picker_wheel.py](picker_wheel.py): A picker wheel where you specify choices and then you can spin the wheel which randomly lands on a choice.
 
-- [Portal Race] [https://github.com/AhmedAbdelmotteleb/v_smart_projects/tree/main/Portal%20Race]: A board game based in C++. 2-4 players. For best results, use Microsoft Visual Studio. 
+- [Portal Race](Portal%20Race): A board game based in C++. 2-4 players. For best results, use Microsoft Visual Studio. 
