@@ -9,6 +9,10 @@ Functions:
 ----------
 create_choices():
     Prompts the user for the number of choices desired, ensures uniqueness of choices, and allows correction of choices.
+
+Note:
+-----
+If for some reason pygame is being unresponsive, try deleting this docstring.
 """
 
 import pygame
