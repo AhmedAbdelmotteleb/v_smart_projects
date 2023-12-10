@@ -204,7 +204,7 @@ while running:
     # Draw the button
     pygame.draw.rect(screen, (0, 255, 0), pygame.Rect(BUTTON_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT))
     if rotating:
-        text = pygame.font.Font(None, 24).render("Stop", True, (0, 0, 0)) #if the arrow is rotating, the button should say "Stop"
+        text = pygame.font.Font(None, 24).render("Choosing", True, (0, 0, 0)) #if the arrow is rotating, the button should say "Stop"
     else:
         text = pygame.font.Font(None, 24).render("Start", True, (0, 0, 0)) #if the arrow is not rotating, the button should say "Start"
     screen.blit(text, (BUTTON_X + 10, BUTTON_Y + 10)) #draw the text on the button
