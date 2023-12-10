@@ -10,14 +10,13 @@ Functions:
 create_choices():
     Prompts the user for the number of choices desired, ensures uniqueness of choices, and allows correction of choices.
 
-Note:
------
-If for some reason pygame is being unresponsive, try deleting this docstring.
 """
 
 import pygame
 import math
 import numpy as np
+import random
+import time
 
 def create_choices():
     """
@@ -58,11 +57,11 @@ pygame.init()
 
 WIDTH, HEIGHT = 700, 700
 CENTER_X, CENTER_Y = WIDTH // 2, HEIGHT // 2
-DEFAULT_ROT_SPEED = 1
+DEFAULT_ROT_SPEED = random.uniform(1, 2)
 ROT_SPEED = DEFAULT_ROT_SPEED
 RADIUS = 300
 ARROW_LENGTH = 0.9 * RADIUS
-DECEL_RATE = 0.001 
+DECEL_RATE = 0.001*DEFAULT_ROT_SPEED
 
 
 # Define button properties
@@ -83,10 +82,11 @@ colors = [
 ]
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-angle = 0  # Start angle
+angle = random.randint(0, 359) # Start angle
 running = True
 rotating = False  # Start with the arrow not rotating
 decelerating = False  # Start with no deceleration
+start_time = 0
 
 # Game loop
 while running:
@@ -96,11 +96,11 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN: #if the left mouse button is pressed
             mouse_x, mouse_y = pygame.mouse.get_pos()
             if BUTTON_X <= mouse_x <= BUTTON_X + BUTTON_WIDTH and BUTTON_Y <= mouse_y <= BUTTON_Y + BUTTON_HEIGHT: #if the mouse is within the button (i.e. the button is clicked)
-                if rotating:
-                    decelerating = True # Start decelerating the rotating arrow
-                else:
-                    rotating = True # Start rotating the arrow
-                    ROT_SPEED = DEFAULT_ROT_SPEED  # Make sure rotation speed to default before rotating again (in case of deceleration)
+                if not rotating:
+                    rotating = True
+                    ROT_SPEED = DEFAULT_ROT_SPEED  # Make sure rotation speed to default before rotating
+                    start_time = time.time()
+                    rotation_duration = random.uniform(4, 8) #randomly choose a rotation duration between 4 and 8 seconds
 
     if rotating:
         # Rotate the arrow
@@ -108,8 +108,14 @@ while running:
         if angle >= 360:
             angle -= 360 # Keep the angle between 0 and 360
 
+        elapsed_time = time.time() - start_time
+
+        if elapsed_time >= rotation_duration:
+            # Start decelerating after 4-5 seconds
+            decelerating = True
+
         if decelerating:
-            # If decelerating, decrease the rotation speed
+            # If decelerating, decrease the rotation speed of the arrow
             ROT_SPEED -= DECEL_RATE
             if ROT_SPEED <= 0:
                 # If the rotation speed is 0 or less, stop rotating and decelerating
