@@ -12,3 +12,5 @@ Current projects:
 - [Portal Race](Portal%20Race): A board game based in C++. 2-4 players. For best results, use Microsoft Visual Studio. 
 
 - [collatz_conjecture.ipynb](collatz_conjecture.ipynb): This Jupyter notebook contains a Python implementation of the Collatz Conjecture. It generates and visualizes the sequence for any given positive integer.
+
+- [scraping_arXiv.py](scraping_arXiv.py): This script downloads figures from arXiv URLs by accessing the plots hyperlink in the comments section of the webpage.
