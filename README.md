@@ -14,3 +14,5 @@ Current projects:
 - [collatz_conjecture.ipynb](collatz_conjecture.ipynb): This Jupyter notebook contains a Python implementation of the Collatz Conjecture. It generates and visualizes the sequence for any given positive integer.
 
 - [scraping_arXiv.py](scraping_arXiv.py): This script downloads figures from arXiv URLs by accessing the plots hyperlink in the comments section of the webpage.
+
+- [youtube_vid_downloader.py](youtube_vid_downloader.py): This script downloads a video from YouTube and adds captions if requested.
