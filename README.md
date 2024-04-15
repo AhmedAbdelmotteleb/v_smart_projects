@@ -16,3 +16,5 @@ Current projects:
 - [scraping_arXiv.py](scraping_arXiv.py): This script downloads figures from arXiv URLs by accessing the plots hyperlink in the comments section of the webpage.
 
 - [youtube_vid_downloader.py](youtube_vid_downloader.py): This script downloads a video from YouTube and adds captions if requested.
+
+- [pdf_merger.py](pdf_merger.py): This scripts merges pdf files in a directory.
